@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { collection, doc, setDoc, onSnapshot, writeBatch } from 'firebase/firestore';
+import ChatbotView from './ChatbotView';
 import { db, handleFirestoreError, OperationType } from '../firebase';
 import {
   AreaChart,
@@ -1429,99 +1430,122 @@ export default function ExecutiveDashboardView({
       </div>
 
       {/* 2. SUB TAB SELECTOR */}
-      <div className="grid grid-cols-4 md:grid-cols-8 gap-0.5 p-0.5 bg-neutral-950/85 rounded-xl border border-white/5 shadow-inner">
+      <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2 p-1.5 bg-neutral-950/75 rounded-2xl border border-white/5 shadow-inner">
+        {/* Money / Financials Tab */}
         <button
           onClick={() => setActiveSubTab('financials')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'financials'
-              ? 'bg-[#291811] text-amber-400 border border-amber-500/10'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-black shadow-md shadow-emerald-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          📈 Money
+          <Coins size={14} className={activeSubTab === 'financials' ? 'text-emerald-400' : 'text-neutral-500'} />
+          <span>Money</span>
         </button>
+
+        {/* Logistics Tab */}
         <button
           onClick={() => setActiveSubTab('logistics')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer relative ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'logistics'
-              ? 'bg-[#291811] text-amber-400 border border-amber-500/10'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-sky-500/10 text-sky-400 border-sky-500/20 font-black shadow-md shadow-sky-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          🛵 Logistics
+          <Truck size={14} className={activeSubTab === 'logistics' ? 'text-sky-400' : 'text-neutral-500'} />
+          <span>Logistics</span>
           {weatherCondition === 'rain' && (
-            <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
+            <span className="absolute top-1.5 right-1.5 sm:top-1 sm:right-1 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
           )}
         </button>
+
+        {/* Analytics Tab */}
         <button
           onClick={() => setActiveSubTab('analytics')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'analytics'
-              ? 'bg-[#291811] text-indigo-400 border border-indigo-500/15 font-bold'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 font-black shadow-md shadow-indigo-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          📊 Analytics
+          <Activity size={14} className={activeSubTab === 'analytics' ? 'text-indigo-400 animate-pulse' : 'text-neutral-500'} />
+          <span>Analytics</span>
         </button>
+
+        {/* AI Prediction Tab */}
         <button
           onClick={() => setActiveSubTab('ai-prediction')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'ai-prediction'
-              ? 'bg-[#291811] text-[#a855f7] border border-[#a855f7]/15'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-purple-500/10 text-purple-400 border-purple-500/20 font-black shadow-md shadow-purple-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          🧠 AI
+          <Sparkles size={14} className={activeSubTab === 'ai-prediction' ? 'text-purple-400 animate-pulse' : 'text-neutral-500'} />
+          <span>AI Opt</span>
         </button>
+
+        {/* Menu Management (Stock) Tab */}
         <button
           onClick={() => setActiveSubTab('menu-mgmt')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'menu-mgmt'
-              ? 'bg-[#291811] text-amber-400 border border-amber-500/10'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 font-black shadow-md shadow-amber-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          🍔 Stock
+          <Package size={14} className={activeSubTab === 'menu-mgmt' ? 'text-amber-400' : 'text-neutral-500'} />
+          <span>Stock</span>
         </button>
+
+        {/* Tickets Tab */}
         <button
           onClick={() => setActiveSubTab('tickets')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer relative ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'tickets'
-              ? 'bg-[#291811] text-red-500 border border-red-500/10 font-bold'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-red-500/10 text-red-500 border-red-500/20 font-black shadow-md shadow-red-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          🛡️ Tickets
+          <ShieldAlert size={14} className={activeSubTab === 'tickets' ? 'text-red-500' : 'text-neutral-500'} />
+          <span>Tickets</span>
           {complaintTickets.filter((t) => t.status === 'pending').length > 0 && (
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full flex items-center justify-center text-[7px] font-mono font-black text-white leading-none scale-90 md:scale-100">
+            <span className="absolute top-1 right-1 sm:static sm:ml-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-[9px] font-mono font-bold leading-none shrink-0 shadow-sm">
               {complaintTickets.filter((t) => t.status === 'pending').length}
             </span>
           )}
         </button>
+
+        {/* Feedback / Review Tab */}
         <button
           onClick={() => setActiveSubTab('feedback')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer relative ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'feedback'
-              ? 'bg-[#291811] text-amber-400 border border-amber-500/10 font-bold'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 font-black shadow-md shadow-yellow-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          ⭐ Review
+          <Star size={14} className={activeSubTab === 'feedback' ? 'text-yellow-400' : 'text-neutral-500'} />
+          <span>Review</span>
           {dbFeedbacks.length > 0 && (
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-amber-550 bg-amber-500 text-[#0c0705] rounded-full flex items-center justify-center text-[7px] font-mono font-black leading-none md:scale-100 scale-90">
+            <span className="absolute top-1 right-1 sm:static sm:ml-1 w-4 h-4 bg-yellow-500 text-neutral-950 rounded-full flex items-center justify-center text-[9px] font-mono font-bold leading-none shrink-0 shadow-sm">
               {dbFeedbacks.length}
             </span>
           )}
         </button>
+
+        {/* Loyalty Tab */}
         <button
           onClick={() => setActiveSubTab('loyalty')}
-          className={`py-2 text-[8.5px] md:text-[9.5px] font-black uppercase tracking-wider text-center rounded-lg transition-all cursor-pointer ${
+          className={`py-3 px-3 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-center rounded-xl transition-all cursor-pointer flex flex-col sm:flex-row items-center justify-center gap-1.5 border min-h-[48px] sm:min-h-0 relative ${
             activeSubTab === 'loyalty'
-              ? 'bg-[#291811] text-amber-400 border border-amber-500/15 font-bold'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-pink-500/10 text-pink-400 border-pink-500/20 font-black shadow-md shadow-pink-950/30'
+              : 'bg-neutral-900/30 text-neutral-400 border-transparent hover:text-neutral-200 hover:bg-neutral-900/60'
           }`}
         >
-          🏅 Loyalty
+          <Award size={14} className={activeSubTab === 'loyalty' ? 'text-pink-400' : 'text-neutral-500'} />
+          <span>Loyalty</span>
         </button>
       </div>
 
@@ -2529,143 +2553,165 @@ export default function ExecutiveDashboardView({
 
         {/* PANEL C: PREDICTIVE AI & SMART RESTOCKING FORECASTS */}
         {activeSubTab === 'ai-prediction' && (
-          <div className="space-y-4 animate-fade-in flex flex-col justify-between h-full">
-            <div>
-              <div className="flex justify-between items-center">
-                <span className="text-[9px] font-mono tracking-widest text-[#a855f7] font-bold block uppercase">
-                  AI DEMAND FORECAST & AUTO-BALANCING
-                </span>
-                <span className="text-[8px] font-mono text-purple-400 flex items-center gap-0.5">
-                  <Sparkles size={9} className="animate-spin-slow" /> Predictive Engine Live
-                </span>
-              </div>
-
-              {/* AI Forecast warning summary and Ingredient shortage probabilities */}
-              <div className="mt-2.5 p-3 bg-neutral-950/45 border border-[#a855f7]/15 rounded-xl space-y-1.5 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-[#a855f7]/5 rounded-full blur-[20px] pointer-events-none" />
-                <div className="flex items-center gap-1.5">
-                  <AlertTriangle size={13} className="text-[#a855f7] animate-bounce shrink-0" />
-                  <span className="text-[10px] font-black text-purple-200">AI INGREDIENT CONGESTION DIRECTIVE</span>
-                </div>
-                <p className="text-[8.5px] text-zinc-300 leading-normal">
-                  <span className="text-yellow-400 font-bold font-mono">WARNING:</span> Late evening rush expected in Berea. High (89%) probability of beef mince stockout for curried vetkoeks. 
-                </p>
-                <div className="pt-1 select-none flex items-center gap-1.5">
-                  <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 font-mono font-bold uppercase">
-                    Auto-strategy: Pre-prep 12 mince vetkoeks
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-fade-in lg:h-[650px]">
+            {/* Left Column: Analytics Stats & Projections */}
+            <div className="space-y-4 bg-neutral-950/40 p-4 border border-white/5 rounded-2xl flex flex-col justify-between h-full overflow-y-auto scrollbar-thin">
+              <div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-mono tracking-widest text-[#a855f7] font-bold block uppercase font-sans">
+                    AI DEMAND FORECAST & AUTO-BALANCING
+                  </span>
+                  <span className="text-[8px] font-mono text-purple-400 flex items-center gap-0.5">
+                    <Sparkles size={9} className="animate-spin-slow" /> Predictive Engine Live
                   </span>
                 </div>
-              </div>
 
-              {/* Smart Balancing appliance chart */}
-              <div className="mt-4 bg-neutral-950/50 p-3 rounded-xl border border-white/5 space-y-2">
-                <span className="text-[8px] text-neutral-400 font-mono font-black uppercase block">
-                  KITCHEN SYSTEM OCCUPANCY BALANCE
-                </span>
-                
-                <div className="space-y-2">
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[8px] text-zinc-400">
-                      <span>Grill Occupancy load</span>
-                      <span className="font-mono font-bold">{cookingCongestionRatio}% Used</span>
-                    </div>
-                    <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-800 ${
-                          cookingCongestionRatio > 80 ? 'bg-red-500' : cookingCongestionRatio > 50 ? 'bg-orange-500' : 'bg-amber-400'
-                        }`}
-                        style={{ width: `${cookingCongestionRatio}%` }}
-                      ></div>
-                    </div>
+                {/* AI Forecast warning summary and Ingredient shortage probabilities */}
+                <div className="mt-2.5 p-3 bg-neutral-950/45 border border-[#a855f7]/15 rounded-xl space-y-1.5 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-[#a855f7]/5 rounded-full blur-[20px] pointer-events-none" />
+                  <div className="flex items-center gap-1.5">
+                    <AlertTriangle size={13} className="text-[#a855f7] animate-bounce shrink-0" />
+                    <span className="text-[10px] font-black text-purple-200">AI INGREDIENT CONGESTION DIRECTIVE</span>
                   </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[8px] text-zinc-400">
-                      <span>Vetkoek Fryer Capacity load</span>
-                      <span className="font-mono font-bold">{Math.min(95, Math.round(cookingCongestionRatio * 1.1))}% Used</span>
-                    </div>
-                    <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-800 ${
-                          cookingCongestionRatio * 1.1 > 80 ? 'bg-red-500 animate-pulse' : 'bg-amber-400'
-                        }`}
-                        style={{ width: `${Math.min(100, Math.round(cookingCongestionRatio * 1.1))}%` }}
-                      ></div>
-                    </div>
+                  <p className="text-[8.5px] text-zinc-300 leading-normal">
+                    <span className="text-yellow-400 font-bold font-mono">WARNING:</span> Late evening rush expected in Berea. High (89%) probability of beef mince stockout for curried vetkoeks. 
+                  </p>
+                  <div className="pt-1 select-none flex items-center gap-1.5">
+                    <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 font-mono font-bold uppercase">
+                      Auto-strategy: Pre-prep 12 mince vetkoeks
+                    </span>
                   </div>
                 </div>
-              </div>
 
-              {/* 🔮 Interactive AI Ingredient Exhaustion Predictor & Recommended Orders */}
-              <div className="mt-4 bg-neutral-950/50 p-3 rounded-xl border border-[#a855f7]/15 space-y-2">
-                <span className="text-[8px] uppercase tracking-widest text-[#a855f7] font-bold block font-mono">
-                  🔮 AI Item Exhaustion Forecasts ({orders.length} Past Orders Analysed)
-                </span>
-                
-                <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1 scrollbar-thin">
-                  {menuItems.map((item) => {
-                    const forecast = stockForecasts[item.id];
-                    const stock = inventoryStock[item.id] !== undefined ? inventoryStock[item.id] : 30;
-                    if (!forecast) return null;
-
-                    return (
-                      <div 
-                        key={item.id}
-                        className={`p-2 rounded-lg border flex items-center justify-between gap-3 text-[9px] transition-colors ${
-                          forecast.replenishRecommended 
-                            ? 'bg-purple-950/20 border-purple-500/20' 
-                            : 'bg-neutral-900/60 border-white/5'
-                        }`}
-                      >
-                        <div className="min-w-0 space-y-0.5 flex-1">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="font-bold text-neutral-150 truncate block">{item.name}</span>
-                            {forecast.replenishRecommended && (
-                              <span className="text-[6.5px] bg-amber-500/10 text-amber-400 font-mono font-bold px-1 border border-amber-500/20 rounded animate-pulse uppercase">
-                                REPLENISH ADVISED
-                              </span>
-                            )}
-                          </div>
-                          
-                          <div className="flex items-center gap-2 text-[7.5px] text-neutral-400 font-mono">
-                            <span>Stock: <strong className="text-white">{stock} units</strong></span>
-                            <span>&bull;</span>
-                            <span>Rate: <strong className="text-white">{(forecast.salesRatePerDay).toFixed(1)}/day</strong></span>
-                          </div>
-                        </div>
-
-                        <div className="text-right space-y-0.5 shrink-0">
-                          <span className={`text-[9px] font-bold font-mono block ${forecast.replenishRecommended ? 'text-amber-400 font-black' : 'text-neutral-400'}`}>
-                            {forecast.replenishRecommended ? `🚨 ~${forecast.runOutTimeText}` : `✅ ~${forecast.runOutTimeText}`}
-                          </span>
-                          <span className="text-[6.5px] text-zinc-500 font-mono block leading-none">
-                            {forecast.confidence}
-                          </span>
-                        </div>
+                {/* Smart Balancing appliance chart */}
+                <div className="mt-4 bg-neutral-950/50 p-3 rounded-xl border border-white/5 space-y-2">
+                  <span className="text-[8px] text-neutral-400 font-mono font-black uppercase block">
+                    KITCHEN SYSTEM OCCUPANCY BALANCE
+                  </span>
+                  
+                  <div className="space-y-2">
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[8px] text-zinc-400">
+                        <span>Grill Occupancy load</span>
+                        <span className="font-mono font-bold">{cookingCongestionRatio}% Used</span>
                       </div>
-                    );
-                  })}
+                      <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-800 ${
+                            cookingCongestionRatio > 80 ? 'bg-red-500' : cookingCongestionRatio > 50 ? 'bg-orange-500' : 'bg-amber-400'
+                          }`}
+                          style={{ width: `${cookingCongestionRatio}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[8px] text-zinc-400">
+                        <span>Vetkoek Fryer Capacity load</span>
+                        <span className="font-mono font-bold">{Math.min(95, Math.round(cookingCongestionRatio * 1.1))}% Used</span>
+                      </div>
+                      <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-800 ${
+                            cookingCongestionRatio * 1.1 > 80 ? 'bg-red-500 animate-pulse' : 'bg-amber-400'
+                          }`}
+                          style={{ width: `${Math.min(100, Math.round(cookingCongestionRatio * 1.1))}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 🔮 Interactive AI Ingredient Exhaustion Predictor & Recommended Orders */}
+                <div className="mt-4 bg-neutral-950/50 p-3 rounded-xl border border-[#a855f7]/15 space-y-2">
+                  <span className="text-[8px] uppercase tracking-widest text-[#a855f7] font-bold block font-mono">
+                    🔮 AI Item Exhaustion Forecasts ({orders.length} Past Orders Analysed)
+                  </span>
+                  
+                  <div className="space-y-2 max-h-[150px] overflow-y-auto pr-1 scrollbar-thin">
+                    {menuItems.map((item) => {
+                      const forecast = stockForecasts[item.id];
+                      const stock = inventoryStock[item.id] !== undefined ? inventoryStock[item.id] : 30;
+                      if (!forecast) return null;
+
+                      return (
+                        <div 
+                          key={item.id}
+                          className={`p-2 rounded-lg border flex items-center justify-between gap-3 text-[9px] transition-colors ${
+                            forecast.replenishRecommended 
+                              ? 'bg-purple-950/20 border-purple-500/20' 
+                              : 'bg-neutral-900/60 border-white/5'
+                          }`}
+                        >
+                          <div className="min-w-0 space-y-0.5 flex-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-bold text-neutral-150 truncate block">{item.name}</span>
+                              {forecast.replenishRecommended && (
+                                <span className="text-[6.5px] bg-amber-500/10 text-amber-400 font-mono font-bold px-1 border border-amber-500/20 rounded animate-pulse uppercase">
+                                  REPLENISH ADVISED
+                                </span>
+                              )}
+                            </div>
+                            
+                            <div className="flex items-center gap-2 text-[7.5px] text-neutral-400 font-mono">
+                              <span>Stock: <strong className="text-white">{stock} units</strong></span>
+                              <span>&bull;</span>
+                              <span>Rate: <strong className="text-white">{(forecast.salesRatePerDay).toFixed(1)}/day</strong></span>
+                            </div>
+                          </div>
+
+                          <div className="text-right space-y-0.5 shrink-0">
+                            <span className={`text-[9px] font-bold font-mono block ${forecast.replenishRecommended ? 'text-amber-400 font-black' : 'text-neutral-400'}`}>
+                              {forecast.replenishRecommended ? `🚨 ~${forecast.runOutTimeText}` : `✅ ~${forecast.runOutTimeText}`}
+                            </span>
+                            <span className="text-[6.5px] text-zinc-500 font-mono block leading-none">
+                              {forecast.confidence}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Live terminal-like intelligence update feed */}
+                <div className="mt-4 space-y-1.5">
+                  <span className="text-[8px] text-neutral-500 font-mono font-bold uppercase block">
+                    DYNAMIC EXECUTABLE AI FEED:
+                  </span>
+                  <div className="bg-black/85 rounded-xl p-2.5 border border-[#a855f7]/15 font-mono text-[7px] text-[#aa84cc] space-y-1">
+                    {aiFeed.map((feedLine, idx) => (
+                      <div key={idx} className="line-clamp-2">
+                        {feedLine}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Live terminal-like intelligence update feed */}
-              <div className="mt-4 space-y-1.5">
-                <span className="text-[8px] text-neutral-500 font-mono font-bold uppercase block">
-                  DYNAMIC EXECUTABLE AI FEED:
-                </span>
-                <div className="bg-black/85 rounded-xl p-2.5 border border-[#a855f7]/15 font-mono text-[7px] text-[#aa84cc] space-y-1">
-                  {aiFeed.map((feedLine, idx) => (
-                    <div key={idx} className="line-clamp-2">
-                      {feedLine}
-                    </div>
-                  ))}
-                </div>
+              <div className="pt-3 border-t border-white/5 text-[9px] text-[#9e7a68] italic flex justify-between">
+                <span>*Generative demand models update recursively on each checkout event.</span>
+                <span className="font-bold underline text-purple-400">Config model</span>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-white/5 text-[9px] text-[#9e7a68] italic flex justify-between">
-              <span>*Generative demand models update recursively on each checkout event.</span>
-              <span className="font-bold underline text-purple-400">Config model</span>
+            {/* Right Column: Dynamic Conversational Advisory Partner Chat */}
+            <div className="bg-neutral-950/40 p-0 border border-white/5 rounded-2xl h-full flex flex-col overflow-hidden relative shadow-2xl">
+              <ChatbotView 
+                orders={orders}
+                userName="Lekker Bites Manager"
+                menuItems={menuItems}
+                onSelectItem={() => {}}
+                onNavigateToTab={() => {}}
+                isAdminMode={true}
+                financeMetrics={financeMetrics}
+                inventoryStock={inventoryStock}
+                complaintTickets={complaintTickets}
+                weatherCondition={weatherCondition}
+                cookingCongestionRatio={cookingCongestionRatio}
+                kitchenDeadlockActive={kitchenDeadlockActive}
+                demandMultiplier={demandMultiplier}
+              />
             </div>
           </div>
         )}

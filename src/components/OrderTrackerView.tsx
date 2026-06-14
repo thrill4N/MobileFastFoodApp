@@ -701,6 +701,150 @@ export default function OrderTrackerView({
             </div>
           </div>
 
+          {/* Custom Visual Transit Map Progress Bar */}
+          <div className="glass-panel border-amber-500/10 rounded-2xl p-4 space-y-4 shadow-lg bg-neutral-950/40 font-sans">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] font-mono tracking-widest text-amber-400 font-bold block uppercase">
+                🚚 Delivery Route & Stage Progress
+              </span>
+              <span className="text-[8.5px] font-mono text-neutral-400">
+                Gauteng CBD Logistics Area Map
+              </span>
+            </div>
+
+            {/* Interactive Progress Bar with Custom Pins */}
+            <div className="relative pt-6 pb-4 px-4 bg-neutral-950/80 rounded-xl border border-white/5 overflow-hidden">
+              {/* Background Map Grid / Lines detail */}
+              <div className="absolute inset-0 bg-[radial-gradient(#ffffff03_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
+              
+              {/* Route line connecting pins */}
+              <div className="relative h-2 w-full bg-neutral-900 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full rounded-full transition-all duration-1000 ${
+                    deadlockActive 
+                      ? 'bg-red-500 animate-pulse' 
+                      : 'bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-500'
+                  }`}
+                  style={{
+                    width: `${
+                      activeOrder.status === 'placed' ? '12%' :
+                      activeOrder.status === 'preparing' ? '30%' :
+                      activeOrder.status === 'on-the-way' ? `${30 + (driverProgressPct * 0.55)}%` :
+                      activeOrder.status === 'delivered' ? '100%' : '5%'
+                    }`
+                  }}
+                />
+              </div>
+
+              {/* Pins relative position */}
+              <div className="relative w-full -mt-5 flex justify-between px-1">
+                
+                {/* 1. KITCHEN PIN (10% approx) */}
+                <div className="flex flex-col items-center">
+                  <div className="h-6" /> {/* spacer */}
+                  <div className="relative flex items-center justify-center">
+                    {/* Pulsing glow if active */}
+                    {(activeOrder.status === 'placed' || activeOrder.status === 'preparing') && !deadlockActive && (
+                      <span className="absolute w-7 h-7 rounded-full bg-orange-500/25 animate-ping" />
+                    )}
+                    <div 
+                      className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all shadow-md ${
+                        activeOrder.status === 'placed' || activeOrder.status === 'preparing'
+                          ? 'bg-orange-500/10 border-orange-500 scale-110 text-orange-400'
+                          : 'bg-emerald-500 text-neutral-950 border-emerald-500'
+                      }`}
+                    >
+                      {activeOrder.status !== 'placed' && activeOrder.status !== 'preparing' ? (
+                        <Check size={11} strokeWidth={4} />
+                      ) : (
+                        <span className="text-[10px]">🍳</span>
+                      )}
+                    </div>
+                  </div>
+                  <span className={`text-[9.5px] font-bold mt-2 ${
+                    activeOrder.status === 'placed' || activeOrder.status === 'preparing'
+                      ? 'text-orange-400'
+                      : 'text-emerald-400'
+                  }`}>
+                    Kitchen
+                  </span>
+                  <span className="text-[7.5px] font-mono text-neutral-500 leading-none mt-0.5">
+                    {activeOrder.status === 'placed' ? 'Placed' : activeOrder.status === 'preparing' ? 'Cooking' : 'Completed'}
+                  </span>
+                </div>
+
+                {/* 2. TRANSIT PIN (50% approx) */}
+                <div className="flex flex-col items-center">
+                  <div className="h-6" /> {/* spacer */}
+                  <div className="relative flex items-center justify-center">
+                    {/* Pulsing glow if active */}
+                    {activeOrder.status === 'on-the-way' && (
+                      <span className="absolute w-7 h-7 rounded-full bg-amber-500/25 animate-ping" />
+                    )}
+                    <div 
+                      className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all shadow-md ${
+                        activeOrder.status === 'on-the-way'
+                          ? 'bg-amber-400/10 border-amber-400 scale-110 text-amber-400 animate-pulse'
+                          : activeOrder.status === 'delivered'
+                          ? 'bg-emerald-500 text-neutral-950 border-emerald-500'
+                          : 'bg-[#120a06] border-neutral-800 text-neutral-650'
+                      }`}
+                    >
+                      {activeOrder.status === 'delivered' ? (
+                        <Check size={11} strokeWidth={4} />
+                      ) : (
+                        <Truck size={12} className={activeOrder.status === 'on-the-way' ? 'animate-bounce text-amber-400' : 'text-neutral-500'} />
+                      )}
+                    </div>
+                  </div>
+                  <span className={`text-[9.5px] font-bold mt-2 ${
+                    activeOrder.status === 'on-the-way'
+                      ? 'text-amber-400'
+                      : activeOrder.status === 'delivered'
+                      ? 'text-emerald-400'
+                      : 'text-neutral-500'
+                  }`}>
+                    Transit
+                  </span>
+                  <span className="text-[7.5px] font-mono text-neutral-500 leading-none mt-0.5">
+                    {activeOrder.status === 'on-the-way' ? 'On the road' : activeOrder.status === 'delivered' ? 'Completed' : 'Queued'}
+                  </span>
+                </div>
+
+                {/* 3. ARRIVING PIN (90% approx) */}
+                <div className="flex flex-col items-center">
+                  <div className="h-6" /> {/* spacer */}
+                  <div className="relative flex items-center justify-center">
+                    {/* Pulsing glow if active */}
+                    {activeOrder.status === 'delivered' && (
+                      <span className="absolute w-7 h-7 rounded-full bg-emerald-500/25 animate-ping" />
+                    )}
+                    <div 
+                      className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all shadow-md ${
+                        activeOrder.status === 'delivered'
+                          ? 'bg-emerald-500/10 border-emerald-500 scale-110 text-emerald-400'
+                          : 'bg-[#120a06] border-neutral-800 text-neutral-600'
+                      }`}
+                    >
+                      <MapPin size={12} className={activeOrder.status === 'delivered' ? 'text-emerald-400' : 'text-neutral-500'} />
+                    </div>
+                  </div>
+                  <span className={`text-[9.5px] font-bold mt-2 ${
+                    activeOrder.status === 'delivered'
+                      ? 'text-emerald-400 font-extrabold'
+                      : 'text-neutral-500'
+                  }`}>
+                    Arriving
+                  </span>
+                  <span className="text-[7.5px] font-mono text-neutral-500 leading-none mt-0.5">
+                    {activeOrder.status === 'delivered' ? 'Arrived!' : activeOrder.status === 'on-the-way' ? 'Nearly here' : 'Pending'}
+                  </span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
           {/* ETA Clock Panel */}
           <div className="glass-panel border-amber-500/12 rounded-2xl p-4 flex justify-between items-center shadow-lg">
             <div className="flex gap-3 items-center">

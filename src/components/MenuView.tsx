@@ -56,6 +56,11 @@ export default function MenuView({
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioContextClass) {
         const ctx = new AudioContextClass();
+        
+        // Read dynamic volume from settings registry
+        const savedVol = localStorage.getItem('lekker_sound_volume');
+        const volMultiplier = savedVol !== null ? parseInt(savedVol, 10) / 100 : 0.8;
+
         const playTone = (freq: number, start: number, duration: number) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
@@ -64,8 +69,8 @@ export default function MenuView({
           osc.connect(gain);
           gain.connect(ctx.destination);
           gain.gain.setValueAtTime(0, ctx.currentTime + start);
-          gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + start + 0.01);
-          gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + start + duration - 0.02);
+          gain.gain.linearRampToValueAtTime(0.18 * volMultiplier, ctx.currentTime + start + 0.01);
+          gain.gain.linearRampToValueAtTime(0.18 * volMultiplier, ctx.currentTime + start + duration - 0.02);
           gain.gain.linearRampToValueAtTime(0, ctx.currentTime + start + duration);
           osc.start(ctx.currentTime + start);
           osc.stop(ctx.currentTime + start + duration);

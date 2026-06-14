@@ -5,12 +5,14 @@ import MenuView from './components/MenuView';
 import LoyaltyView from './components/LoyaltyView';
 import CartView from './components/CartView';
 import OrderTrackerView from './components/OrderTrackerView';
+import ChatbotView from './components/ChatbotView';
 import FoodDetailModal from './components/FoodDetailModal';
 import ExecutiveDashboardView from './components/ExecutiveDashboardView';
 import CustomerAuthView from './components/CustomerAuthView';
 import SplashView from './components/SplashView';
 import ReceiptView from './components/ReceiptView';
 import QRScannerView from './components/QRScannerView';
+import SettingsView from './components/SettingsView';
 import { Lock, FileText, AlertCircle, Sparkles, QrCode } from 'lucide-react';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -46,7 +48,10 @@ export default function App() {
   }, [menuItems]);
 
   // Navigation states
-  const [activeTab, setActiveTab] = useState<'home' | 'menu' | 'cart' | 'loyalty' | 'tracking'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'menu' | 'cart' | 'loyalty' | 'tracking' | 'chatbot' | 'settings'>('home');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('lekker_theme') as 'light' | 'dark') || 'dark';
+  });
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   
@@ -548,6 +553,7 @@ export default function App() {
         isAdminMode={isAdminMode}
         isCustomerAuthenticated={isCustomerAuthenticated}
         showSplash={showSplash}
+        theme={theme}
       >
         {showSplash ? (
           <SplashView onDismiss={() => setShowSplash(false)} />
@@ -752,6 +758,22 @@ export default function App() {
                 loyalty={loyalty}
                 setLoyalty={setLoyalty}
                 handleAddToCart={handleAddToCart}
+              />
+            )}
+
+            {activeTab === 'chatbot' && (
+              <ChatbotView
+                orders={orders}
+                userName={userName}
+                menuItems={menuItems}
+                onNavigateToTab={setActiveTab}
+                onSelectItem={(item) => setSelectedMenuItem(item)}
+              />
+            )}
+
+            {activeTab === 'settings' && (
+              <SettingsView
+                onThemeChange={(newTheme) => setTheme(newTheme)}
               />
             )}
 

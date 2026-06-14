@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Utensils, ShoppingBag, Award, MapPin, Wifi, Battery, Signal } from 'lucide-react';
+import { Home, Utensils, ShoppingBag, Award, MapPin, Wifi, Battery, Signal, MessageSquare, Settings } from 'lucide-react';
 
 interface PhoneFrameProps {
   children: React.ReactNode;
   activeTab: string;
-  setActiveTab: (tab: 'home' | 'menu' | 'cart' | 'loyalty' | 'tracking') => void;
+  setActiveTab: (tab: 'home' | 'menu' | 'cart' | 'loyalty' | 'tracking' | 'chatbot' | 'settings') => void;
   cartCount: number;
   hasActiveOrder: boolean;
   isAdminMode?: boolean;
   isCustomerAuthenticated?: boolean;
   showSplash?: boolean;
+  theme?: 'light' | 'dark';
 }
 
 export default function PhoneFrame({
@@ -21,6 +22,7 @@ export default function PhoneFrame({
   isAdminMode = false,
   isCustomerAuthenticated = true,
   showSplash = false,
+  theme = 'dark',
 }: PhoneFrameProps) {
   const [time, setTime] = useState('');
 
@@ -59,7 +61,7 @@ export default function PhoneFrame({
       {/* Physical Phone Device Container */}
       <div
         id="phone-device-container"
-        className="relative w-full max-w-[412px] h-[844px] bg-[#0c0705] rounded-[52px] border-[10px] border-neutral-800 shadow-3xl flex flex-col overflow-hidden z-10 transition-transform duration-300 hover:scale-[1.01]"
+        className={`relative w-full max-w-[412px] h-[844px] rounded-[52px] border-[10px] border-neutral-800 shadow-3xl flex flex-col overflow-hidden z-10 transition-transform duration-300 hover:scale-[1.01] ${theme === 'light' ? 'theme-light bg-[#faf8f5]' : 'bg-[#0c0705]'}`}
         style={{
           boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.95), inset 0 0 12px rgba(255, 158, 11, 0.08), 0 0 0 2px rgba(255,158,11,0.05)',
         }}
@@ -135,6 +137,19 @@ export default function PhoneFrame({
               </button>
 
               <button
+                id="tab-btn-chatbot"
+                onClick={() => setActiveTab('chatbot')}
+                className={`flex flex-col items-center justify-center flex-1 py-1 transition-all ${
+                  activeTab === 'chatbot' ? 'text-amber-400 font-medium' : 'text-neutral-500 hover:text-neutral-400'
+                }`}
+              >
+                <div className="p-1 rounded-xl">
+                  <MessageSquare size={22} className={activeTab === 'chatbot' ? 'stroke-[2.5px] text-amber-400 glow-amber-soft' : 'stroke-[2px]'} />
+                </div>
+                <span id="tab-label-chatbot" className="text-[10px] mt-0.5 font-medium tracking-wide">Ask AI</span>
+              </button>
+
+              <button
                 id="tab-btn-cart"
                 onClick={() => setActiveTab('cart')}
                 className={`flex flex-col items-center justify-center flex-1 py-1 transition-all relative ${
@@ -183,6 +198,19 @@ export default function PhoneFrame({
                   )}
                 </div>
                 <span id="tab-label-tracking" className="text-[10px] mt-0.5 font-medium tracking-wide">Track</span>
+              </button>
+
+              <button
+                id="tab-btn-settings"
+                onClick={() => setActiveTab('settings')}
+                className={`flex flex-col items-center justify-center flex-1 py-1 transition-all relative ${
+                  activeTab === 'settings' ? 'text-amber-400 font-medium' : 'text-neutral-500 hover:text-neutral-400'
+                }`}
+              >
+                <div className="p-1 rounded-xl relative">
+                  <Settings size={22} className={activeTab === 'settings' ? 'stroke-[2.5px] text-amber-400 glow-amber-soft rotate-45' : 'stroke-[2px] hover:rotate-12 transition-transform'} />
+                </div>
+                <span id="tab-label-settings" className="text-[10px] mt-0.5 font-medium tracking-wide">Settings</span>
               </button>
             </div>
           )

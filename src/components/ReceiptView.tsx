@@ -71,6 +71,10 @@ export default function ReceiptView({ order, onClose, onReturnToHome, onReorderW
       if (!AudioContextClass) return;
       const ctx = new AudioContextClass();
 
+      // Read dynamic volume from settings registry
+      const savedVol = localStorage.getItem('lekker_sound_volume');
+      const volMultiplier = savedVol !== null ? parseInt(savedVol, 10) / 100 : 0.8;
+
       // Mechanical Carriage motor steady note
       const osc = ctx.createOscillator();
       const gainNode = ctx.createGain();
@@ -88,10 +92,10 @@ export default function ReceiptView({ order, onClose, onReturnToHome, onReorderW
       osc.connect(gainNode);
       gainNode.connect(ctx.destination);
 
-      // Volume envelop
+      // Volume envelop using dynamic multiplier
       gainNode.gain.setValueAtTime(0, ctx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.15);
-      gainNode.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 1.25);
+      gainNode.gain.linearRampToValueAtTime(0.06 * volMultiplier, ctx.currentTime + 0.15);
+      gainNode.gain.linearRampToValueAtTime(0.06 * volMultiplier, ctx.currentTime + 1.25);
       gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.6);
 
       osc.start();

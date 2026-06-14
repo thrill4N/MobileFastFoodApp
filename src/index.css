@@ -119,3 +119,121 @@
 .animate-fade-in {
   animation: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ==========================================
+   AMBIENT LIGHT THEME overrides & modifiers 
+   ========================================== */
+#phone-device-container.theme-light {
+  background-color: #f7f3ee !important;
+  color: #1e1310 !important;
+  border-color: #d1c7bd !important;
+}
+
+#phone-device-container.theme-light #phone-status-bar {
+  background-color: #eadfd5 !important;
+  color: #1e1310 !important;
+  border-bottom-color: rgba(139, 92, 26, 0.1) !important;
+}
+
+#phone-device-container.theme-light #phone-status-bar span,
+#phone-device-container.theme-light #phone-status-bar svg {
+  color: #3b2a22 !important;
+}
+
+#phone-device-container.theme-light #phone-screen-content {
+  background-color: #fcf9f6 !important;
+  color: #211612 !important;
+}
+
+#phone-device-container.theme-light #phone-navigation-bar {
+  background-color: #eadfd5 !important;
+  border-top-color: rgba(139, 92, 26, 0.1) !important;
+}
+
+#phone-device-container.theme-light #phone-navigation-bar button {
+  color: #6e584f !important;
+}
+
+#phone-device-container.theme-light #phone-navigation-bar button.text-amber-400 {
+  color: #d97706 !important;
+}
+
+/* Glass panels convert to exquisite soft milk/cream sheets */
+#phone-device-container.theme-light .glass-panel,
+#phone-device-container.theme-light .glass-panel-interactive {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(139, 92, 26, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(33, 22, 18, 0.05), inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+  color: #1e1310 !important;
+}
+
+#phone-device-container.theme-light .glass-panel h2,
+#phone-device-container.theme-light .glass-panel h3,
+#phone-device-container.theme-light .glass-panel h4,
+#phone-device-container.theme-light .glass-panel span,
+#phone-device-container.theme-light .glass-panel p,
+#phone-device-container.theme-light .glass-panel-interactive h4,
+#phone-device-container.theme-light .glass-panel-interactive p {
+  color: #1e1310 !important;
+}
+
+/* Deep text replacements */
+#phone-device-container.theme-light .text-white,
+#phone-device-container.theme-light h2,
+#phone-device-container.theme-light h3,
+#phone-device-container.theme-light h4 {
+  color: #1e1310 !important;
+}
+
+#phone-device-container.theme-light .text-amber-400 {
+  color: #b45309 !important;
+}
+
+#phone-device-container.theme-light .text-yellow-400 {
+  color: #ca8a04 !important;
+}
+
+#phone-device-container.theme-light .text-neutral-400,
+#phone-device-container.theme-light .text-neutral-500,
+#phone-device-container.theme-light .text-zinc-400,
+#phone-device-container.theme-light .text-zinc-500,
+#phone-device-container.theme-light .text-gray-400,
+#phone-device-container.theme-light .text-neutral-300 {
+  color: #635047 !important;
+}
+
+#phone-device-container.theme-light .text-neutral-200,
+#phone-device-container.theme-light .text-white\/95,
+#phone-device-container.theme-light .text-neutral-100 {
+  color: #2c1d17 !important;
+}
+
+#phone-device-container.theme-light .bg-neutral-900,
+#phone-device-container.theme-light .bg-neutral-950,
+#phone-device-container.theme-light .bg-zinc-900,
+#phone-device-container.theme-light .bg-zinc-950,
+#phone-device-container.theme-light .bg-stone-900,
+#phone-device-container.theme-light .bg-black,
+#phone-device-container.theme-light .bg-[#120a06] {
+  background-color: #f0e8e1 !important;
+  border-color: rgba(139, 92, 26, 0.12) !important;
+}
+
+#phone-device-container.theme-light input,
+#phone-device-container.theme-light textarea,
+#phone-device-container.theme-light select {
+  background-color: #faf7f4 !important;
+  color: #1e1310 !important;
+  border-color: rgba(139, 92, 26, 0.2) !important;
+}
+
+#phone-device-container.theme-light .bg-zinc-900\/50 {
+  background-color: rgba(234, 222, 210, 0.6) !important;
+}
+
+#phone-device-container.theme-light .border-white\/5,
+#phone-device-container.theme-light .border-white\/10,
+#phone-device-container.theme-light .border-neutral-800 {
+  border-color: rgba(139, 92, 26, 0.12) !important;
+}
+

@@ -9,7 +9,7 @@ interface HomeViewProps {
   loyalty: LoyaltyRewards;
   onSelectCategory: (category: string) => void;
   onSelectItem: (item: MenuItem) => void;
-  onNavigateToTab: (tab: 'home' | 'menu' | 'cart' | 'loyalty' | 'tracking') => void;
+  onNavigateToTab: (tab: 'home' | 'menu' | 'cart' | 'loyalty' | 'tracking' | 'chatbot') => void;
   diningOption: 'dine-in' | 'takeaway';
   setDiningOption: (opt: 'dine-in' | 'takeaway') => void;
   tableNumber: string;
@@ -159,6 +159,35 @@ export default function HomeView({
             <h4 className="text-xs font-black text-white uppercase group-hover:text-amber-300 transition-colors">Digital Queue QR Scanner</h4>
             <p className="text-[9px] text-neutral-400 leading-snug line-clamp-2">
               Bypass cashier congestion at the till! Scan food tags on physical displays to instantly add items & pay inside this app.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 💬 AI Chatbot Quick Access Banner */}
+      <div
+        id="home-chatbot-banner"
+        onClick={() => onNavigateToTab('chatbot')}
+        className="relative overflow-hidden rounded-3xl border border-orange-500/15 p-4 bg-[#110906] hover:border-amber-500/40 cursor-pointer group transition-all duration-300"
+        style={{
+          boxShadow: '0 8px 30px rgba(245, 158, 11, 0.05)'
+        }}
+      >
+        <div className="absolute top-0 right-0 w-24 h-24 bg-orange-600/5 rounded-full blur-[25px] pointer-events-none" />
+        <div className="flex gap-4 items-center">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 p-[1.5px] shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-md shadow-orange-950/55">
+            <div className="w-full h-full bg-neutral-950 rounded-[15px] flex items-center justify-center text-amber-400">
+              <Sparkles size={18} className="animate-pulse text-amber-400" />
+            </div>
+          </div>
+          <div className="space-y-0.5 flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[8.5px] font-mono text-orange-400 font-extrabold uppercase tracking-widest block">🇿🇦 AI CULINARY ASSISTANT</span>
+              <span className="text-[7.4px] bg-amber-500 text-neutral-950 font-mono font-bold px-1.5 py-0.2 rounded uppercase font-black">NEW</span>
+            </div>
+            <h4 className="text-xs font-black text-white uppercase group-hover:text-amber-300 transition-colors">Ask LekkerBot AI 💬</h4>
+            <p className="text-[9px] text-neutral-400 leading-snug line-clamp-2">
+              Inquire about active order status on the way, check food allergy alerts/gluten-free choices, or get premium chef pairings!
             </p>
           </div>
         </div>
